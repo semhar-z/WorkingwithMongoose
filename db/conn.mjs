@@ -1,14 +1,21 @@
-import { MongoClient } from "mongodb";
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
-const client = new MongoClient(process.env.ATLAS_URI);
+dotenv.config();
 
-let conn;
-try {
-  conn = await client.connect();
-} catch (e) {
-  console.error(e);
-}
+const dbURI = process.env.ATLAS_URI;
 
-let db = conn.db("sample_training");
+const connectToDb = async () => {
+  try {
+    await mongoose.connect(dbURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to MongoDB");
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+    process.exit(1);
+  }
+};
 
-export default db;
+export  default connectToDb;
